@@ -25,6 +25,7 @@ import androidx.navigation.compose.rememberNavController
 import com.diamood.data.main.routes.Routes.AddRoute
 import com.diamood.data.main.routes.Routes.HomeRoute
 import com.diamood.data.main.routes.Routes.ShopRoute
+import com.diamood.ui.home.Home
 import com.diamood.ui.main.menu.BottomNavigationItems.Add
 import com.diamood.ui.main.menu.BottomNavigationItems.Home
 import com.diamood.ui.main.menu.BottomNavigationItems.Shop
@@ -50,14 +51,7 @@ fun DiamoodNavHost(
 ) {
     NavHost(navController, startDestination = HomeRoute, modifier = modifier) {
         composable<HomeRoute>(typeMap = HomeRoute.typeMap) {
-            Text(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .fillMaxWidth()
-                    .wrapContentSize(),
-                text = "Home",
-                textAlign = TextAlign.Center,
-            )
+            Home()
         }
 
         composable<AddRoute>(typeMap = AddRoute.typeMap) {
