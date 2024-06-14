@@ -1,5 +1,7 @@
 package com.diamood.ui.main
 
+import android.app.Activity
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -26,13 +28,18 @@ import com.diamood.data.main.routes.Routes.ShopRoute
 import com.diamood.ui.main.menu.BottomNavigationItems.Add
 import com.diamood.ui.main.menu.BottomNavigationItems.Home
 import com.diamood.ui.main.menu.BottomNavigationItems.Shop
+import com.diamood.ui.shop.Shop
 import com.diamood.viewmodels.main.BottomBarViewModel
 
 @Composable
-fun Diamood() {
+fun Diamood(context : Activity?) {
     val navController = rememberNavController()
     Scaffold(bottomBar = { DiamoodBottomBar(navController = navController) }) {
         DiamoodNavHost(Modifier.padding(it), navController)
+
+        BackHandler {
+            context?.finish()
+        }
     }
 }
 
@@ -65,14 +72,7 @@ fun DiamoodNavHost(
         }
 
         composable<ShopRoute>(typeMap = ShopRoute.typeMap) {
-            Text(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .fillMaxWidth()
-                    .wrapContentSize(),
-                text = "Shop",
-                textAlign = TextAlign.Center,
-            )
+            Shop()
         }
     }
 }
@@ -110,7 +110,7 @@ fun DiamoodBottomBar(
 @Preview
 @Composable
 fun DiamoodPreview() {
-    Diamood()
+    Diamood(null)
 }
 
 @Preview
