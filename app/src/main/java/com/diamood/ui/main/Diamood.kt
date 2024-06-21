@@ -82,7 +82,6 @@ fun DiamoodBottomBar(
         Shop
     )
 
-
     BottomAppBar {
         NavigationBar {
             menuItems.forEach {
