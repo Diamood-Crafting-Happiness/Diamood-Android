@@ -1,5 +1,6 @@
 package com.diamood.theme
 
+import androidx.compose.material3.ButtonColors
 import androidx.compose.ui.graphics.Color
 
 val Pink80 = Color(0xFFEFB8C8)
@@ -14,3 +15,10 @@ val PrimaryDark = Color(0xFF8E44AD)
 
 val SecondaryDark = Color(0xFF3498db)
 val SecondaryLight = Color(0xFF2980b9)
+
+val ButtonColors = ButtonColors(
+    containerColor = PrimaryLight,
+    contentColor = Color.White,
+    disabledContentColor = Color.LightGray,
+    disabledContainerColor = Color.Black
+)

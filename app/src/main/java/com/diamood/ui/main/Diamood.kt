@@ -26,6 +26,7 @@ import com.diamood.data.main.routes.Routes.AddRoute
 import com.diamood.data.main.routes.Routes.HomeRoute
 import com.diamood.data.main.routes.Routes.ShopRoute
 import com.diamood.ui.home.Home
+import com.diamood.ui.home.HomeDirection
 import com.diamood.ui.main.menu.BottomNavigationItems.Add
 import com.diamood.ui.main.menu.BottomNavigationItems.Home
 import com.diamood.ui.main.menu.BottomNavigationItems.Shop
@@ -33,10 +34,16 @@ import com.diamood.ui.shop.Shop
 import com.diamood.viewmodels.main.BottomBarViewModel
 
 @Composable
-fun Diamood(context : Activity?) {
+fun Diamood(context: Activity?) {
     val navController = rememberNavController()
-    Scaffold(bottomBar = { DiamoodBottomBar(navController = navController) }) {
-        DiamoodNavHost(Modifier.padding(it), navController)
+    val bottomBarViewModel: BottomBarViewModel = hiltViewModel()
+    Scaffold(bottomBar = {
+        DiamoodBottomBar(
+            navController = navController,
+            viewModel = bottomBarViewModel
+        )
+    }) {
+        DiamoodNavHost(Modifier.padding(it), navController, bottomBarViewModel)
 
         BackHandler {
             context?.finish()
@@ -47,11 +54,21 @@ fun Diamood(context : Activity?) {
 @Composable
 fun DiamoodNavHost(
     modifier: Modifier,
-    navController: NavHostController
+    navController: NavHostController,
+    viewModel: BottomBarViewModel
 ) {
     NavHost(navController, startDestination = HomeRoute, modifier = modifier) {
         composable<HomeRoute>(typeMap = HomeRoute.typeMap) {
-            Home()
+            Home {
+                when (it) {
+                    HomeDirection.SHOP -> {
+                        viewModel.onClick(ShopRoute)
+                        navController.navigate(ShopRoute)
+                    }
+
+                    HomeDirection.LOGIN -> {}
+                }
+            }
         }
 
         composable<AddRoute>(typeMap = AddRoute.typeMap) {
@@ -73,7 +90,7 @@ fun DiamoodNavHost(
 
 @Composable
 fun DiamoodBottomBar(
-    viewModel: BottomBarViewModel = hiltViewModel(),
+    viewModel: BottomBarViewModel,
     navController: NavHostController
 ) {
     val menuItems = listOf(
@@ -109,11 +126,11 @@ fun DiamoodPreview() {
 @Preview
 @Composable
 fun DiamoodNavHostPreview() {
-    DiamoodNavHost(Modifier, navController = rememberNavController())
+    DiamoodNavHost(Modifier, navController = rememberNavController(), viewModel = hiltViewModel())
 }
 
 @Preview
 @Composable
 fun DiamoodBottomBarPreview() {
-    DiamoodBottomBar(navController = rememberNavController())
+    DiamoodBottomBar(navController = rememberNavController(), viewModel = hiltViewModel())
 }
