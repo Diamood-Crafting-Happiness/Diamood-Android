@@ -9,6 +9,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.diamood.ui.home.buttons.HomeButtons
+import com.diamood.ui.home.buttons.HomeDirection
+import com.diamood.ui.home.tutorial.HomeTutorial
 
 
 @Composable
@@ -17,9 +20,7 @@ fun Home(navigate: (HomeDirection) -> Unit) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(text = "Title")
         }
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text(text = "Tutorial")
-        }
+        HomeTutorial()
         HomeButtons(navigate)
     }
 }

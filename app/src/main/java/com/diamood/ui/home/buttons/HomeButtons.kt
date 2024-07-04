@@ -1,4 +1,4 @@
-package com.diamood.ui.home
+package com.diamood.ui.home.buttons
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
