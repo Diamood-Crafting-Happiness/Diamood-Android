@@ -1,9 +1,9 @@
 package com.diamood.ui.main.menu
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.outlined.AddCircle
 import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.ShoppingCart
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.diamood.data.main.routes.Routes
 import com.diamood.data.main.routes.Routes.AddRoute
@@ -25,7 +25,7 @@ sealed class BottomNavigationItems(val icon: ImageVector, val title: String, val
     )
 
     data object Shop : BottomNavigationItems(
-        Icons.Outlined.ShoppingCart,
+        Icons.Filled.ShoppingCart,
         "Tienda",
         ShopRoute
     )
