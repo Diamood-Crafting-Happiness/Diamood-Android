@@ -12,15 +12,6 @@ data class Dot(
 ) {
     companion object {
 
-        /**
-         * Calculate where this dot will be in the next iteration.
-         *
-         * @param borders Size of the canvas where dots bounce.
-         * @param durationMillis How long time is going to pass until next iteration.
-         * @param dotRadius The radius of this dot when it is drawn.
-         * @param speedCoefficient Although there is vector that indicates motion, this
-         * parameter is used to speed up or down the animation at will.
-         */
         fun Dot.next(
             alphaRate: Float = 0.005f
         ): Dot {
