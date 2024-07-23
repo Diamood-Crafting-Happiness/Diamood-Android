@@ -1,11 +1,14 @@
 package com.diamood.ui.login.dots
 
+import androidx.annotation.FloatRange
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.unit.IntSize
+import java.util.Random
 
 data class Dot(
     val position: Offset,
-    val vector: Offset
+    val vector: Offset,
+    @FloatRange(0.0, 1.0) val alpha: Float
 ) {
     companion object {
 
@@ -19,49 +22,17 @@ data class Dot(
          * parameter is used to speed up or down the animation at will.
          */
         fun Dot.next(
-            borders: IntSize,
-            durationMillis: Long,
-            dotRadius: Float,
-            speedCoefficient: Float
+            alphaRate: Float = 0.005f
         ): Dot {
-            val speed = vector * speedCoefficient
-
             return Dot(
-                position = position + Offset(
-                    x = speed.x / 1000f * durationMillis,
-                    y = speed.y / 1000f * durationMillis,
-                ),
-                vector = vector
+                position = position,
+                vector = vector,
+                alpha = alpha
             ).let { (position, vector) ->
-                val borderTop = dotRadius
-                val borderLeft = dotRadius
-                val borderBottom = borders.height - dotRadius
-                val borderRight = borders.width - dotRadius
                 Dot(
-                    position = Offset(
-                        x = when {
-                            position.x < borderLeft -> borderLeft - (position.x - borderLeft)
-                            position.x > borderRight -> borderRight - (position.x - borderRight)
-                            else -> position.x
-                        },
-                        y = when {
-                            position.y < borderTop -> borderTop - (position.y - borderTop)
-                            position.y > borderBottom -> borderBottom - (position.y - borderBottom)
-                            else -> position.y
-                        }
-                    ),
-                    vector = Offset(
-                        x = when {
-                            position.x < borderLeft -> -vector.x
-                            position.x > borderRight -> -vector.x
-                            else -> vector.x
-                        },
-                        y = when {
-                            position.y < borderTop -> -vector.y
-                            position.y > borderBottom -> -vector.y
-                            else -> vector.y
-                        }
-                    )
+                    position = position,
+                    vector = vector,
+                    alpha = alpha - alphaRate
                 )
             }
         }
@@ -87,7 +58,8 @@ data class Dot(
                         1f
                     ).random() * ((borders.height.toFloat() / 100f).toInt()..(borders.height.toFloat() / 10f).toInt()).random()
                         .toFloat()
-                )
+                ),
+                alpha = Random().nextFloat()
             )
         }
     }

@@ -6,8 +6,6 @@ import kotlin.math.roundToInt
 
 data class DotsState(
     val dots: List<Dot> = emptyList(),
-    val pointer: Dot? = null,
-    val dotRadius: Float,
     val size: IntSize = IntSize.Zero,
     val speed: Float
 ) {
@@ -26,10 +24,10 @@ data class DotsState(
             )
         }
 
-        fun DotsState.next(durationMillis: Long): DotsState {
+        fun DotsState.next(): DotsState {
             return copy(
                 dots = dots.map {
-                    it.next(size, durationMillis, dotRadius, speed)
+                    it.next()
                 }
             )
         }
