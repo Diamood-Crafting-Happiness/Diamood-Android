@@ -1,11 +1,10 @@
-package com.diamood
+package com.diamood.ui.main
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import com.diamood.theme.DiamoodTheme
-import com.diamood.ui.main.Diamood
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -15,6 +14,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             DiamoodTheme {
+                //Login(context = this)
                 Diamood(this)
             }
         }
