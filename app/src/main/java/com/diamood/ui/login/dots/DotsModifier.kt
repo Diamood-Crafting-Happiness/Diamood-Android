@@ -23,7 +23,7 @@ fun Modifier.dots(
     contentColor: Color = BackgroundLight,
     dotRadius: Float = 4f,
     speed: Float = 0.05f,
-    populationFactor: Float = 0.05f,
+    populationFactor: Float = 0.1f,
 ) = this.composed {
     val dotsModel = remember {
         DotsModel(

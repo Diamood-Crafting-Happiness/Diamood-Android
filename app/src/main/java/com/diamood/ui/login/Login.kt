@@ -2,6 +2,7 @@ package com.diamood.ui.login
 
 import android.app.Activity
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,6 +20,7 @@ import androidx.compose.ui.unit.sp
 import com.diamood.theme.PrimaryLight
 import com.diamood.theme.SecondaryLight
 import com.diamood.ui.login.dots.dots
+import com.diamood.ui.login.form.LoginInput
 
 @Composable
 fun Login(context: Activity?) {
@@ -32,16 +34,25 @@ fun Login(context: Activity?) {
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         Text(
-            modifier = Modifier.fillMaxWidth().padding(vertical = 32.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 32.dp),
             text = "Iniciar sesión",
             fontWeight = FontWeight.Bold,
             fontSize = 32.sp,
             textAlign = TextAlign.Center
         )
-        Text(text = "Iniciar sesión", fontWeight = FontWeight.Bold, fontSize = 32.sp)
-        Text(text = "Iniciar sesión", fontWeight = FontWeight.Bold, fontSize = 32.sp)
-        //LoginInput()
-        //LoginCancel()
+        LoginInput()
+        Text(
+            text = "Cancelar",
+            fontSize = 18.sp,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 32.dp)
+                .clickable { context?.finish() },
+            textAlign = TextAlign.Center,
+            color = PrimaryLight,
+        )
     }
 }
 
