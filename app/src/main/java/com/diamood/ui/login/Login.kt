@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.text.font.FontWeight
@@ -17,21 +18,23 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.diamood.theme.PrimaryLight
 import com.diamood.theme.SecondaryLight
 import com.diamood.ui.login.dots.dots
 import com.diamood.ui.login.form.LoginInput
+import com.diamood.viewmodels.login.LoginInputViewModel
 
 @Composable
 fun Login(context: Activity?) {
+    val loginInputViewModel: LoginInputViewModel = hiltViewModel()
     Column(
         modifier = Modifier
             .background(loginBackground)
             .fillMaxSize()
-            .dots(
-
-            ),
-        verticalArrangement = Arrangement.SpaceBetween
+            .dots(),
+        verticalArrangement = Arrangement.SpaceBetween,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
             modifier = Modifier
@@ -42,12 +45,11 @@ fun Login(context: Activity?) {
             fontSize = 32.sp,
             textAlign = TextAlign.Center
         )
-        LoginInput()
+        LoginInput(loginInputViewModel)
         Text(
             text = "Cancelar",
             fontSize = 18.sp,
             modifier = Modifier
-                .fillMaxWidth()
                 .padding(vertical = 32.dp)
                 .clickable { context?.finish() },
             textAlign = TextAlign.Center,
