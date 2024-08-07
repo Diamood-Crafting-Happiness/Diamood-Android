@@ -7,6 +7,7 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -19,7 +20,8 @@ import com.diamood.viewmodels.main.BottomBarViewModel
 @Composable
 fun DiamoodBottomBar(
     viewModel: BottomBarViewModel,
-    navController: NavHostController
+    navController: NavHostController,
+    modifier: Modifier
 ) {
     val menuItems = listOf(
         Home,
@@ -27,7 +29,7 @@ fun DiamoodBottomBar(
         Shop
     )
 
-    BottomAppBar {
+    BottomAppBar(modifier = modifier) {
         NavigationBar {
             menuItems.forEach {
                 NavigationBarItem(
@@ -47,5 +49,9 @@ fun DiamoodBottomBar(
 @Preview
 @Composable
 fun DiamoodBottomBarPreview() {
-    DiamoodBottomBar(navController = rememberNavController(), viewModel = hiltViewModel())
+    DiamoodBottomBar(
+        navController = rememberNavController(),
+        viewModel = hiltViewModel(),
+        modifier = Modifier
+    )
 }
