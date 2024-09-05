@@ -25,13 +25,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavHostController
 import com.diamood.data.login.Country
+import com.diamood.data.main.routes.Routes.CountryRoute
 import com.diamood.theme.PrimaryLight
 import com.diamood.theme.White30
 import com.diamood.viewmodels.login.LoginInputViewModel
 
 @Composable
-fun LoginInput(viewModel: LoginInputViewModel) {
+fun LoginInput(viewModel: LoginInputViewModel, navHostController: NavHostController?) {
     val phoneInfo by viewModel.phoneInfo.collectAsStateWithLifecycle()
 
     Column(
@@ -42,7 +44,7 @@ fun LoginInput(viewModel: LoginInputViewModel) {
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
 
-        CountryPickerButton(phoneInfo.country) {}
+        CountryPickerButton(phoneInfo.country) { navHostController?.navigate(CountryRoute) }
         PhoneInput(phoneInfo.number) { viewModel.onPhoneChanged(it) }
         SMSButton(phoneInfo.number) {}
     }
@@ -119,5 +121,5 @@ fun SMSButtonPreview() {
 @Preview
 @Composable
 fun LoginInputPreview() {
-    LoginInput(hiltViewModel())
+    LoginInput(hiltViewModel(),null)
 }

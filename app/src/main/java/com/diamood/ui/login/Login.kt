@@ -27,7 +27,7 @@ fun Login(onNavigate: (Routes) -> Unit) {
 
     NavHost(navController, startDestination = LoginRoute, modifier = Modifier) {
         composable<LoginRoute>(typeMap = LoginRoute.typeMap) {
-            LoginScreen(loginInputViewModel) { onNavigate(HomeRoute) }
+            LoginScreen(loginInputViewModel, navController) { onNavigate(HomeRoute) }
         }
 
         composable<CountryRoute>(typeMap = CountryRoute.typeMap) {
