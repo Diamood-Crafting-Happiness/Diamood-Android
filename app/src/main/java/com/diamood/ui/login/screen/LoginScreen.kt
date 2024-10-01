@@ -15,6 +15,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.diamood.theme.PrimaryLight
 import com.diamood.ui.login.dots.dots
 import com.diamood.ui.login.form.LoginInput
@@ -22,7 +23,11 @@ import com.diamood.ui.login.loginBackground
 import com.diamood.viewmodels.login.LoginInputViewModel
 
 @Composable
-fun LoginScreen(viewModel: LoginInputViewModel, onFinish: () -> Unit) {
+fun LoginScreen(
+    viewModel: LoginInputViewModel,
+    navHostController: NavHostController,
+    onFinish: () -> Unit
+) {
     Column(
         modifier = Modifier
             .background(loginBackground)
@@ -40,7 +45,7 @@ fun LoginScreen(viewModel: LoginInputViewModel, onFinish: () -> Unit) {
             fontSize = 32.sp,
             textAlign = TextAlign.Center
         )
-        LoginInput(viewModel)
+        LoginInput(viewModel, navHostController)
         Text(
             text = "Cancelar",
             fontSize = 18.sp,
