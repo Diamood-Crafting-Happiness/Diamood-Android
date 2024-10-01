@@ -1,11 +1,15 @@
 package com.diamood.api.country
 
+import com.diamood.api.json.JsonHelper
 import com.diamood.data.login.Country
 import javax.inject.Inject
 
-class CountryRepositoryImpl @Inject constructor() : CountryRepository {
+class CountryRepositoryImpl @Inject constructor(
+    private val helper: JsonHelper
+) : CountryRepository {
+
     override fun getCountryList(): List<Country> {
-        return emptyList()
+        return helper.getAsset("Country.json")
     }
 }
 

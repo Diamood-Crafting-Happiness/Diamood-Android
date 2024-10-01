@@ -31,7 +31,10 @@ fun Login(onNavigate: (Routes) -> Unit) {
         }
 
         composable<CountryRoute>(typeMap = CountryRoute.typeMap) {
-            CountryListScreen(countryListViewModel) { loginInputViewModel.onCountrySelected(it) }
+            CountryListScreen(countryListViewModel) {
+                loginInputViewModel.onCountrySelected(it)
+                navController.popBackStack()
+            }
         }
     }
 }
@@ -45,4 +48,3 @@ val loginBackground = Brush.horizontalGradient(
 fun LoginPreview() {
     Login {}
 }
-

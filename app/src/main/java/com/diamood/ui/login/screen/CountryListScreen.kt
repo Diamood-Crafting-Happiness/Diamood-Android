@@ -21,7 +21,10 @@ import com.diamood.viewmodels.login.CountryListViewModel
 
 @Composable
 fun CountryListScreen(viewModel: CountryListViewModel, onCountrySelected: (Country) -> Unit) {
-    LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+    LazyColumn(
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        modifier = Modifier.padding(horizontal = 16.dp)
+    ) {
         items(viewModel.countries) {
             CountryItem(it, onCountrySelected)
         }
@@ -43,7 +46,7 @@ fun CountryItem(country: Country, onCountrySelected: (Country) -> Unit) {
         ) {
             Text(text = "${country.flag} ")
             Text(text = "${country.name} ", fontWeight = FontWeight.Bold, color = Color.Black)
-            Text(text = "${country.code} ", color = Color.Black)
+            Text(text = "${country.phoneCode} ", color = Color.Black)
         }
     }
 }
