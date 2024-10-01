@@ -10,6 +10,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.diamood.api.home.HomeRepositoryFakeImpl
 import com.diamood.data.main.routes.Routes.LoggedHomeRoute
 import com.diamood.data.main.routes.Routes.TutorialRoute
 import com.diamood.ui.home.buttons.HomeButtons
@@ -21,11 +22,11 @@ import com.diamood.viewmodels.home.HomeViewModel
 
 
 @Composable
-fun Home(navigate: (HomeDirection) -> Unit) {
-    val viewModel: HomeViewModel = hiltViewModel<HomeViewModel>()
+fun Home(viewModel: HomeViewModel = hiltViewModel(), navigate: (HomeDirection) -> Unit) {
     val navController = rememberNavController()
+    val route = viewModel.routeValue
 
-    NavHost(navController, startDestination = viewModel.route, modifier = Modifier) {
+    NavHost(navController, startDestination = route, modifier = Modifier) {
         composable<TutorialRoute>(typeMap = TutorialRoute.typeMap) {
             Column(
                 modifier = Modifier.fillMaxHeight(),
@@ -45,6 +46,12 @@ fun Home(navigate: (HomeDirection) -> Unit) {
 
 @Preview
 @Composable
-fun HomePreview() {
-    Home {}
+fun HomeTutorialPreview() {
+    Home(viewModel = HomeViewModel(HomeRepositoryFakeImpl(false))) {}
+}
+
+@Preview
+@Composable
+fun HomeLoggedPreview() {
+    Home(viewModel = HomeViewModel(HomeRepositoryFakeImpl(true))) {}
 }

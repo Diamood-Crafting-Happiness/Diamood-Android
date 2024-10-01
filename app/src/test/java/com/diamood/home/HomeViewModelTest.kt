@@ -9,9 +9,7 @@ class HomeViewModelTest {
 
     @Test
     fun `when user is not logged, then route is tutorial`() {
-        val repository = HomeRepositoryFakeImpl()
-
-        repository.fakeUserLoginStatus = false
+        val repository = HomeRepositoryFakeImpl(false)
 
         val viewModel = HomeViewModel(repository)
 
@@ -20,9 +18,7 @@ class HomeViewModelTest {
 
     @Test
     fun `when user is logged, then route is logged`() {
-        val repository = HomeRepositoryFakeImpl()
-
-        repository.fakeUserLoginStatus = true
+        val repository = HomeRepositoryFakeImpl(true)
 
         val viewModel = HomeViewModel(repository)
 

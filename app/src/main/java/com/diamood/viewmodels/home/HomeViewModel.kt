@@ -10,18 +10,19 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject internal constructor(
-    homeRepository: HomeRepository
+    private val homeRepository: HomeRepository
 ) : ViewModel() {
 
-    private val _route = MutableStateFlow<Routes>(
-        Routes.TutorialRoute
-    )
-    val route = _route.asStateFlow()
+    private val _route: MutableStateFlow<Routes>
+        get() {
+            val route = when (homeRepository.getUserLoginStatus()) {
+                true -> Routes.LoggedHomeRoute
+                false -> Routes.TutorialRoute
+            }
 
-    init {
-        _route.value = when (homeRepository.getUserLoginStatus()) {
-            true -> Routes.LoggedHomeRoute
-            false -> Routes.TutorialRoute
+            return MutableStateFlow(route)
         }
-    }
+
+    val route = _route.asStateFlow()
+    val routeValue = route.value
 }

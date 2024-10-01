@@ -13,9 +13,9 @@ class HomeRepositoryImpl @Inject constructor() : HomeRepository {
     }
 }
 
-class HomeRepositoryFakeImpl : HomeRepository {
+class HomeRepositoryFakeImpl(userLogged: Boolean) : HomeRepository {
 
-    var fakeUserLoginStatus = false
+    private var fakeUserLoginStatus = userLogged
 
     override fun getUserLoginStatus(): Boolean {
         return fakeUserLoginStatus
