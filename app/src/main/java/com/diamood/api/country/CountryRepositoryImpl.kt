@@ -14,13 +14,16 @@ class CountryRepositoryImpl @Inject constructor(
 }
 
 class CountryRepositoryFakeImpl : CountryRepository {
+
+    var fakeCountryList = listOf(
+        Country("España", "🇪🇸", "ES", "+34"),
+        Country("España", "🇪🇸", "ES", "+34"),
+        Country("España", "🇪🇸", "ES", "+34"),
+        Country("España", "🇪🇸", "ES", "+34"),
+        Country("España", "🇪🇸", "ES", "+34")
+    )
+
     override fun getCountryList(): List<Country> {
-        return listOf(
-            Country("España", "🇪🇸", "ES", "+34"),
-            Country("España", "🇪🇸", "ES", "+34"),
-            Country("España", "🇪🇸", "ES", "+34"),
-            Country("España", "🇪🇸", "ES", "+34"),
-            Country("España", "🇪🇸", "ES", "+34")
-        )
+        return fakeCountryList
     }
 }

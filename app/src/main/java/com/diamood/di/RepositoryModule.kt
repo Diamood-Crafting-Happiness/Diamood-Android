@@ -2,6 +2,8 @@ package com.diamood.di
 
 import com.diamood.api.country.CountryRepository
 import com.diamood.api.country.CountryRepositoryImpl
+import com.diamood.api.home.HomeRepository
+import com.diamood.api.home.HomeRepositoryImpl
 import com.diamood.api.json.JsonHelper
 import com.diamood.api.json.JsonHelperIml
 import dagger.Binds
@@ -17,6 +19,11 @@ abstract class RepositoryModule {
     abstract fun bindCountryRepository(
         countryRepositoryImpl: CountryRepositoryImpl
     ): CountryRepository
+
+    @Binds
+    abstract fun bindHomeRepository(
+        homeRepositoryImpl: HomeRepositoryImpl
+    ): HomeRepository
 
     @Binds
     abstract fun bindJsonHelper(
