@@ -5,12 +5,15 @@ import androidx.lifecycle.viewModelScope
 import com.diamood.api.country.CountryRepository
 import com.diamood.data.login.Country
 import com.diamood.domain.login.GetCountryListUseCase
+import com.diamood.ui.login.LoginNavigationEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -20,6 +23,9 @@ import javax.inject.Inject
 class CountryListViewModel @Inject constructor(
     private val getCountryListUseCase: GetCountryListUseCase
 ) : ViewModel() {
+
+    private val navigationChannel = Channel<LoginNavigationEvent>()
+    val navigationEventsChannelFlow = navigationChannel.receiveAsFlow()
 
     private val _searchText = MutableStateFlow("")
     val searchText = _searchText.asStateFlow()
@@ -41,6 +47,13 @@ class CountryListViewModel @Inject constructor(
 
     fun onSearchTextChange(text: String) {
         _searchText.value = text
+    }
+
+    fun cancelSelection() {
+        viewModelScope.launch {
+            _searchText.value = ""
+            navigationChannel.send(LoginNavigationEvent.NavigateToLogin)
+        }
     }
 
     private fun retrieveCountries() {
