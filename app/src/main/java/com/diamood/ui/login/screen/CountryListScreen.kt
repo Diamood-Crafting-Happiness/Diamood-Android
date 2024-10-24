@@ -1,15 +1,21 @@
 package com.diamood.ui.login.screen
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -17,16 +23,33 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.diamood.api.country.CountryRepositoryFakeImpl
 import com.diamood.data.login.Country
+import com.diamood.domain.login.GetCountryListUseCase
 import com.diamood.viewmodels.login.CountryListViewModel
 
 @Composable
 fun CountryListScreen(viewModel: CountryListViewModel, onCountrySelected: (Country) -> Unit) {
-    LazyColumn(
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = Modifier.padding(horizontal = 16.dp)
+    val searchText by viewModel.searchText.collectAsState()
+    val countries by viewModel.countries.collectAsState()
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
     ) {
-        items(viewModel.countries) {
-            CountryItem(it, onCountrySelected)
+        TextField(
+            value = searchText,
+            onValueChange = viewModel::onSearchTextChange,
+            modifier = Modifier.fillMaxWidth()
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
+        ) {
+            items(countries) { country ->
+                CountryItem(country, onCountrySelected)
+            }
         }
     }
 }
@@ -37,6 +60,7 @@ fun CountryItem(country: Country, onCountrySelected: (Country) -> Unit) {
         onClick = { onCountrySelected(country) },
         modifier = Modifier
             .fillMaxWidth()
+            .padding(vertical = 4.dp)
     ) {
         Row(
             modifier = Modifier
@@ -54,8 +78,8 @@ fun CountryItem(country: Country, onCountrySelected: (Country) -> Unit) {
 @Preview
 @Composable
 fun CountryListScreenPreview() {
-    val repository = CountryRepositoryFakeImpl()
-    val viewModel = CountryListViewModel(repository)
+    val useCase = GetCountryListUseCase(CountryRepositoryFakeImpl())
+    val viewModel = CountryListViewModel(useCase)
 
     CountryListScreen(viewModel = viewModel) { }
 }
