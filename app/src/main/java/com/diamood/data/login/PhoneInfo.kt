@@ -13,4 +13,12 @@ data class Country(
     val flag: String?,
     val code: String?,
     val phoneCode: String?,
-)
+) {
+    fun doesMatchQuery(query: String): Boolean {
+        val matchingCombinations = listOf("$name", "$code", "$phoneCode")
+
+        return matchingCombinations.any { combination ->
+            combination.lowercase().contains(query.lowercase())
+        }
+    }
+}

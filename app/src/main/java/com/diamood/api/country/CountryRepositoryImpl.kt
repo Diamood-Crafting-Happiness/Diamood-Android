@@ -8,7 +8,7 @@ class CountryRepositoryImpl @Inject constructor(
     private val helper: JsonHelper
 ) : CountryRepository {
 
-    override fun getCountryList(): List<Country> {
+    override suspend fun getCountryList(): List<Country> {
         return helper.getAsset("Country.json")
     }
 }
@@ -23,7 +23,7 @@ class CountryRepositoryFakeImpl : CountryRepository {
         Country("España", "🇪🇸", "ES", "+34")
     )
 
-    override fun getCountryList(): List<Country> {
+    override suspend fun getCountryList(): List<Country> {
         return fakeCountryList
     }
 }
