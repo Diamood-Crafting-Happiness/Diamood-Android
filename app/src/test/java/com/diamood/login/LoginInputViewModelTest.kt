@@ -2,6 +2,7 @@ package com.diamood.login
 
 import com.diamood.data.login.Country
 import com.diamood.viewmodels.login.LoginInputViewModel
+import com.diamood.viewmodels.login.LoginState
 import org.junit.Test
 
 class LoginInputViewModelTest {
@@ -24,5 +25,12 @@ class LoginInputViewModelTest {
         viewModel.onPhoneChanged(number)
 
         assert(viewModel.number == number)
+    }
+
+    @Test
+    fun `when send sms button is pressed, then state changes to loading`() {
+        viewModel.onSendSMSClicked()
+
+        assert(viewModel.uiState.value == LoginState.Loading)
     }
 }
