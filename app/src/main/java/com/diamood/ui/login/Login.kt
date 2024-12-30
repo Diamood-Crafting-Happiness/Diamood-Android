@@ -38,7 +38,7 @@ fun Login(onNavigate: (Routes) -> Unit) {
 
         composable<CountryRoute>(typeMap = CountryRoute.typeMap) {
             ObserveAsEvents(flow = countryListViewModel.navigationEventsChannelFlow) { event ->
-                when(event) {
+                when (event) {
                     is LoginNavigationEvent.NavigateToLogin -> navController.popBackStack()
                 }
             }
@@ -47,6 +47,7 @@ fun Login(onNavigate: (Routes) -> Unit) {
                 country?.let {
                     loginInputViewModel.onCountrySelected(it)
                 }
+                navController.popBackStack()
             }
         }
     }
@@ -68,7 +69,7 @@ val loginBackground = Brush.horizontalGradient(
 )
 
 sealed interface LoginNavigationEvent {
-    object NavigateToLogin: LoginNavigationEvent
+    object NavigateToLogin : LoginNavigationEvent
 }
 
 @Preview
