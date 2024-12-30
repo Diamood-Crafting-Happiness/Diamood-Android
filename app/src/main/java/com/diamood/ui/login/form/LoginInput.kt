@@ -17,6 +17,9 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.White
@@ -33,6 +36,8 @@ import com.diamood.data.main.routes.Routes.CountryRoute
 import com.diamood.theme.PrimaryLight
 import com.diamood.theme.White30
 import com.diamood.viewmodels.login.LoginInputViewModel
+
+const val MAX_LENGTH_PHONE_NUMBER = 12
 
 @Composable
 fun LoginInput(viewModel: LoginInputViewModel, navHostController: NavHostController?) {
@@ -71,6 +76,7 @@ fun CountryPickerButton(country: Country, onClick: () -> Unit) {
 
 @Composable
 fun PhoneInput(text: String, onTextChanged: (String) -> Unit) {
+    var input by remember { mutableStateOf(text) }
     Column(Modifier.padding(vertical = 16.dp)) {
         Text(text = "NÚMERO DE TELÉFONO", fontSize = 8.sp, fontWeight = FontWeight.Bold)
         Spacer(modifier = Modifier.height(4.dp))
@@ -78,9 +84,13 @@ fun PhoneInput(text: String, onTextChanged: (String) -> Unit) {
             modifier = Modifier
                 .fillMaxWidth()
                 .background(White30, shape = RoundedCornerShape(8.dp)),
-            value = text,
+            value = input,
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Phone),
-            onValueChange = { onTextChanged(it) },
+            onValueChange = { phoneNumber ->
+                if (phoneNumber.length < MAX_LENGTH_PHONE_NUMBER) input = phoneNumber
+
+                onTextChanged(phoneNumber)
+            },
             decorationBox = { innerTextField ->
                 Row(modifier = Modifier.padding(vertical = 8.dp, horizontal = 4.dp)) {
                     innerTextField()
