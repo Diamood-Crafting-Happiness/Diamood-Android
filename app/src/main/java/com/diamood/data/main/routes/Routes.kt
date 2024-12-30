@@ -39,6 +39,11 @@ sealed class Routes {
     }
 
     @Serializable
+    data object CompleteLoginRoute : Routes() {
+        val typeMap = mapOf(typeOf<CompleteLoginRoute>() to serializableType<CompleteLoginRoute>())
+    }
+
+    @Serializable
     data object CountryRoute : Routes() {
         val typeMap = mapOf(typeOf<CountryRoute>() to serializableType<CountryRoute>())
     }
