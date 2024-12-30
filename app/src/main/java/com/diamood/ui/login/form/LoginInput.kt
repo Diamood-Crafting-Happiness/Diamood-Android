@@ -9,11 +9,13 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -22,6 +24,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -32,16 +35,20 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.diamood.data.login.Country
+import com.diamood.data.main.routes.Routes
 import com.diamood.data.main.routes.Routes.CountryRoute
+import com.diamood.theme.Pink80
 import com.diamood.theme.PrimaryLight
 import com.diamood.theme.White30
 import com.diamood.viewmodels.login.LoginInputViewModel
+import com.diamood.viewmodels.login.LoginState
 
 const val MAX_LENGTH_PHONE_NUMBER = 12
 
 @Composable
 fun LoginInput(viewModel: LoginInputViewModel, navHostController: NavHostController?) {
     val phoneInfo by viewModel.phoneInfo.collectAsStateWithLifecycle()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     Column(
         modifier = Modifier
@@ -50,10 +57,13 @@ fun LoginInput(viewModel: LoginInputViewModel, navHostController: NavHostControl
         verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-
         CountryPickerButton(phoneInfo.country) { navHostController?.navigate(CountryRoute) }
         PhoneInput(phoneInfo.number) { viewModel.onPhoneChanged(it) }
-        SMSButton(phoneInfo.number) {}
+        when (uiState) {
+            LoginState.InProgress -> SMSButton(phoneInfo.number) { viewModel.onSendSMSClicked() }
+            LoginState.Loading -> LoadingSMSButton()
+            LoginState.Completed -> navHostController?.navigate(Routes.CompleteLoginRoute)
+        }
     }
 }
 
@@ -113,6 +123,23 @@ fun SMSButton(text: String, onClick: () -> Unit) {
     }
 }
 
+@Composable
+fun LoadingSMSButton() {
+    Button(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(8.dp),
+        colors = ButtonDefaults.buttonColors(disabledContainerColor = White30),
+        onClick = {}
+    ) {
+        CircularProgressIndicator(
+            modifier = Modifier
+                .width(24.dp)
+                .height(24.dp),
+            trackColor = Pink80
+        )
+    }
+}
+
 @Preview
 @Composable
 fun CountryPickerPreview() {
@@ -129,6 +156,12 @@ fun PhoneInputPreview() {
 @Composable
 fun SMSButtonPreview() {
     SMSButton("600 000 000") {}
+}
+
+@Preview
+@Composable
+fun LoadingSMSButtonPreview() {
+    LoadingSMSButton()
 }
 
 @Preview
