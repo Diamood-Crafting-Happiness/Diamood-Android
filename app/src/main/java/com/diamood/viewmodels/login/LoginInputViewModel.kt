@@ -17,7 +17,7 @@ sealed class LoginState() {
 
 sealed class LoadingState() {
     data object Loading : LoadingState()
-    data object Loaded: LoadingState()
+    data object Loaded : LoadingState()
 }
 
 @HiltViewModel
@@ -27,7 +27,7 @@ class LoginInputViewModel @Inject internal constructor() : ViewModel() {
     val uiState = _uiState.asStateFlow()
 
     private val _loadingState = MutableStateFlow<LoadingState>(LoadingState.Loaded)
-    val isLoading = _loadingState.asStateFlow().value == Loading
+    val isLoading get() = _loadingState.asStateFlow().value == Loading
 
     private val _phoneInfo = MutableStateFlow(
         PhoneInfo(
