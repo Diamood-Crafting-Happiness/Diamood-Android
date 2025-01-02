@@ -3,6 +3,7 @@ package com.diamood.viewmodels.login
 import androidx.lifecycle.ViewModel
 import com.diamood.data.login.Country
 import com.diamood.data.login.PhoneInfo
+import com.diamood.viewmodels.login.LoadingState.Loaded
 import com.diamood.viewmodels.login.LoadingState.Loading
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,8 +27,10 @@ class LoginInputViewModel @Inject internal constructor() : ViewModel() {
     private val _uiState = MutableStateFlow<LoginState>(LoginState.InProgress)
     val uiState = _uiState.asStateFlow()
 
-    private val _loadingState = MutableStateFlow<LoadingState>(LoadingState.Loaded)
-    val isLoading get() = _loadingState.asStateFlow().value == Loading
+    private val _loadingState = MutableStateFlow<LoadingState>(Loaded)
+    val loadingState = _loadingState.asStateFlow()
+
+    val isLoading get() = loadingState.value == Loading
 
     private val _phoneInfo = MutableStateFlow(
         PhoneInfo(
@@ -40,7 +43,8 @@ class LoginInputViewModel @Inject internal constructor() : ViewModel() {
     private val _smsCode = MutableStateFlow("")
     val smsCode = _smsCode.asStateFlow()
 
-    val prefix get() = phoneInfo.value.country
+    val country get() = phoneInfo.value.country
+    val prefix get() = phoneInfo.value.country.phoneCode ?: "+34"
 
     val number get() = phoneInfo.value.number
 
@@ -58,5 +62,9 @@ class LoginInputViewModel @Inject internal constructor() : ViewModel() {
 
     fun onSendSMSClicked() {
         _loadingState.value = Loading
+    }
+
+    fun onNumberChangeClicked() {
+        _uiState.value = LoginState.InProgress
     }
 }

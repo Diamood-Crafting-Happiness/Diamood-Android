@@ -2,6 +2,7 @@ package com.diamood.login
 
 import com.diamood.data.login.Country
 import com.diamood.viewmodels.login.LoginInputViewModel
+import com.diamood.viewmodels.login.LoginState
 import org.junit.Test
 import kotlin.math.roundToInt
 
@@ -15,7 +16,7 @@ class LoginInputViewModelTest {
 
         viewModel.onCountrySelected(country)
 
-        assert(viewModel.prefix == country)
+        assert(viewModel.country == country)
     }
 
     @Test
@@ -41,5 +42,12 @@ class LoginInputViewModelTest {
         viewModel.onSendSMSClicked()
 
         assert(viewModel.isLoading)
+    }
+
+    @Test
+    fun `when change number button is pressed, then state changes to in progress`() {
+        viewModel.onNumberChangeClicked()
+
+        assert(viewModel.uiState.value == LoginState.InProgress)
     }
 }
