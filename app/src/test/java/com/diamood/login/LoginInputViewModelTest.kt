@@ -2,8 +2,8 @@ package com.diamood.login
 
 import com.diamood.data.login.Country
 import com.diamood.viewmodels.login.LoginInputViewModel
-import com.diamood.viewmodels.login.LoginState
 import org.junit.Test
+import kotlin.math.roundToInt
 
 class LoginInputViewModelTest {
 
@@ -25,6 +25,15 @@ class LoginInputViewModelTest {
         viewModel.onPhoneChanged(number)
 
         assert(viewModel.number == number)
+    }
+
+    @Test
+    fun `when sms code is changed, then assign smsCode`() {
+        val number = Math.random().roundToInt().toString().take(6)
+
+        viewModel.onSMSChanged(number)
+
+        assert(viewModel.smsCode.value == number)
     }
 
     @Test

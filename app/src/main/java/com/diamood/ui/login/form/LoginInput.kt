@@ -45,6 +45,7 @@ import com.diamood.viewmodels.login.LoginState.InProgress
 import com.diamood.viewmodels.login.LoginState.SMSSent
 
 const val MAX_LENGTH_PHONE_NUMBER = 12
+const val MAX_LENGTH_SMS_CODE = 6
 
 @Composable
 fun LoginInput(viewModel: LoginInputViewModel, navHostController: NavHostController?) {
@@ -75,7 +76,7 @@ fun InProgressLoginInput(
     val phoneInfo by viewModel.phoneInfo.collectAsStateWithLifecycle()
 
     CountryPickerButton(phoneInfo.country) { navHostController?.navigate(CountryRoute) }
-    PhoneInput(phoneInfo.number) { viewModel.onPhoneChanged(it) }
+    PhoneInput(phoneInfo.number, viewModel::onPhoneChanged)
 
     if (isLoading) {
         LoadingButton()
@@ -84,7 +85,7 @@ fun InProgressLoginInput(
 
     LoginButton(
         text = "Recibir SMS",
-        phoneNumber = phoneInfo.number
+        input = phoneInfo.number
     ) { viewModel.onSendSMSClicked() }
 }
 
@@ -94,15 +95,15 @@ fun SMSSentLoginInput(
     navHostController: NavHostController?,
     isLoading: Boolean
 ) {
-    val phoneInfo by viewModel.phoneInfo.collectAsStateWithLifecycle()
+    val smsCode by viewModel.smsCode.collectAsStateWithLifecycle()
 
     //TODO Add Sent code text/button
-    //Add SMSInput
+    SMSCodeInput(text = smsCode, viewModel::onSMSChanged)
     when (isLoading) {
         true -> LoadingButton()
         false -> LoginButton(
             text = "Iniciar sesión",
-            phoneNumber = phoneInfo.number,
+            input = smsCode,
             minLength = 6
         ) { /**TODO Add login call **/ }
     }
@@ -152,13 +153,39 @@ fun PhoneInput(text: String, onTextChanged: (String) -> Unit) {
 }
 
 @Composable
-fun LoginButton(text: String, phoneNumber: String, minLength: Int = 4, onClick: () -> Unit) {
+fun SMSCodeInput(text: String, onTextChanged: (String) -> Unit) {
+    var input by remember { mutableStateOf(text) }
+    Column(Modifier.padding(vertical = 16.dp)) {
+        Text(text = "CÓDIGO SMS", fontSize = 8.sp, fontWeight = FontWeight.Bold)
+        Spacer(modifier = Modifier.height(4.dp))
+        BasicTextField(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(White30, shape = RoundedCornerShape(8.dp)),
+            value = input,
+            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Phone),
+            onValueChange = { phoneNumber ->
+                if (phoneNumber.length < MAX_LENGTH_SMS_CODE) input = phoneNumber
+
+                onTextChanged(phoneNumber)
+            },
+            decorationBox = { innerTextField ->
+                Row(modifier = Modifier.padding(vertical = 8.dp, horizontal = 4.dp)) {
+                    innerTextField()
+                }
+            }
+        )
+    }
+}
+
+@Composable
+fun LoginButton(text: String, input: String, minLength: Int = 4, onClick: () -> Unit) {
     Button(
         modifier = Modifier.fillMaxWidth(),
         onClick = onClick,
         shape = RoundedCornerShape(8.dp),
         colors = ButtonDefaults.buttonColors(disabledContainerColor = White30),
-        enabled = phoneNumber.length > minLength
+        enabled = input.length > minLength
     ) {
         Text(text = text)
     }
@@ -221,6 +248,12 @@ fun InProgressLoginInputPreview() {
 @Composable
 fun PhoneInputPreview() {
     PhoneInput("600 000 000") {}
+}
+
+@Preview
+@Composable
+fun SMSCodeInputPreview() {
+    SMSCodeInput("") {}
 }
 
 @Preview

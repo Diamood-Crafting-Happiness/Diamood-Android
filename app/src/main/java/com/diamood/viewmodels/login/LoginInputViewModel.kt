@@ -37,6 +37,9 @@ class LoginInputViewModel @Inject internal constructor() : ViewModel() {
     )
     val phoneInfo = _phoneInfo.asStateFlow()
 
+    private val _smsCode = MutableStateFlow("")
+    val smsCode = _smsCode.asStateFlow()
+
     val prefix get() = phoneInfo.value.country
 
     val number get() = phoneInfo.value.number
@@ -47,6 +50,10 @@ class LoginInputViewModel @Inject internal constructor() : ViewModel() {
 
     fun onPhoneChanged(phone: String) {
         _phoneInfo.value = _phoneInfo.value.copy(number = phone)
+    }
+
+    fun onSMSChanged(code: String) {
+        _smsCode.value = code
     }
 
     fun onSendSMSClicked() {
