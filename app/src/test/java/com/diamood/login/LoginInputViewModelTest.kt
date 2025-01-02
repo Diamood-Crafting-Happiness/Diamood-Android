@@ -31,6 +31,6 @@ class LoginInputViewModelTest {
     fun `when send sms button is pressed, then state changes to loading`() {
         viewModel.onSendSMSClicked()
 
-        assert(viewModel.uiState.value == LoginState.Loading)
+        assert(viewModel.isLoading)
     }
 }

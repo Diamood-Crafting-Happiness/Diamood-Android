@@ -24,7 +24,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -41,14 +40,16 @@ import com.diamood.theme.Pink80
 import com.diamood.theme.PrimaryLight
 import com.diamood.theme.White30
 import com.diamood.viewmodels.login.LoginInputViewModel
-import com.diamood.viewmodels.login.LoginState
+import com.diamood.viewmodels.login.LoginState.Completed
+import com.diamood.viewmodels.login.LoginState.InProgress
+import com.diamood.viewmodels.login.LoginState.SMSSent
 
 const val MAX_LENGTH_PHONE_NUMBER = 12
 
 @Composable
 fun LoginInput(viewModel: LoginInputViewModel, navHostController: NavHostController?) {
-    val phoneInfo by viewModel.phoneInfo.collectAsStateWithLifecycle()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val isLoading = viewModel.isLoading
 
     Column(
         modifier = Modifier
@@ -57,13 +58,53 @@ fun LoginInput(viewModel: LoginInputViewModel, navHostController: NavHostControl
         verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        CountryPickerButton(phoneInfo.country) { navHostController?.navigate(CountryRoute) }
-        PhoneInput(phoneInfo.number) { viewModel.onPhoneChanged(it) }
         when (uiState) {
-            LoginState.InProgress -> SMSButton(phoneInfo.number) { viewModel.onSendSMSClicked() }
-            LoginState.Loading -> LoadingSMSButton()
-            LoginState.Completed -> navHostController?.navigate(Routes.CompleteLoginRoute)
+            InProgress -> InProgressLoginInput(viewModel, navHostController, isLoading)
+            SMSSent -> SMSSentLoginInput(viewModel, navHostController, isLoading)
+            Completed -> navHostController?.navigate(Routes.CompleteLoginRoute)
         }
+    }
+}
+
+@Composable
+fun InProgressLoginInput(
+    viewModel: LoginInputViewModel,
+    navHostController: NavHostController?,
+    isLoading: Boolean
+) {
+    val phoneInfo by viewModel.phoneInfo.collectAsStateWithLifecycle()
+
+    CountryPickerButton(phoneInfo.country) { navHostController?.navigate(CountryRoute) }
+    PhoneInput(phoneInfo.number) { viewModel.onPhoneChanged(it) }
+
+    if (isLoading) {
+        LoadingButton()
+        return
+    }
+
+    LoginButton(
+        text = "Recibir SMS",
+        phoneNumber = phoneInfo.number
+    ) { viewModel.onSendSMSClicked() }
+}
+
+@Composable
+fun SMSSentLoginInput(
+    viewModel: LoginInputViewModel,
+    navHostController: NavHostController?,
+    isLoading: Boolean
+) {
+    val phoneInfo by viewModel.phoneInfo.collectAsStateWithLifecycle()
+
+    //TODO Add Sent code text/button
+    //Add SMSInput
+    when (isLoading) {
+        true -> LoadingButton()
+        false -> LoginButton(
+            text = "Iniciar sesión",
+            phoneNumber = phoneInfo.number,
+            minLength = 6
+        ) { /**TODO Add login call **/ }
     }
 }
 
@@ -111,20 +152,20 @@ fun PhoneInput(text: String, onTextChanged: (String) -> Unit) {
 }
 
 @Composable
-fun SMSButton(text: String, onClick: () -> Unit) {
+fun LoginButton(text: String, phoneNumber: String, minLength: Int = 4, onClick: () -> Unit) {
     Button(
         modifier = Modifier.fillMaxWidth(),
         onClick = onClick,
         shape = RoundedCornerShape(8.dp),
         colors = ButtonDefaults.buttonColors(disabledContainerColor = White30),
-        enabled = text.length > 4
+        enabled = phoneNumber.length > minLength
     ) {
-        Text(text = "Recibir SMS")
+        Text(text = text)
     }
 }
 
 @Composable
-fun LoadingSMSButton() {
+fun LoadingButton() {
     Button(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(8.dp),
@@ -148,6 +189,36 @@ fun CountryPickerPreview() {
 
 @Preview
 @Composable
+fun SMSSentLoginInputPreview() {
+    Column(
+        modifier = Modifier
+            .padding(horizontal = 8.dp)
+            .fillMaxWidth(),
+        verticalArrangement = Arrangement.SpaceBetween,
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        SMSSentLoginInput(hiltViewModel(), null, false)
+        SMSSentLoginInput(hiltViewModel(), null, true)
+    }
+}
+
+@Preview
+@Composable
+fun InProgressLoginInputPreview() {
+    Column(
+        modifier = Modifier
+            .padding(horizontal = 8.dp)
+            .fillMaxWidth(),
+        verticalArrangement = Arrangement.SpaceBetween,
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        InProgressLoginInput(hiltViewModel(), null, false)
+        InProgressLoginInput(hiltViewModel(), null, true)
+    }
+}
+
+@Preview
+@Composable
 fun PhoneInputPreview() {
     PhoneInput("600 000 000") {}
 }
@@ -155,13 +226,13 @@ fun PhoneInputPreview() {
 @Preview
 @Composable
 fun SMSButtonPreview() {
-    SMSButton("600 000 000") {}
+    LoginButton("Send SMS", "600 000 000") {}
 }
 
 @Preview
 @Composable
-fun LoadingSMSButtonPreview() {
-    LoadingSMSButton()
+fun LoadingButtonPreview() {
+    LoadingButton()
 }
 
 @Preview
