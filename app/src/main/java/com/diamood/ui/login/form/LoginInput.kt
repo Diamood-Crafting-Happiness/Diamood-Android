@@ -39,6 +39,7 @@ import com.diamood.data.main.routes.Routes.CountryRoute
 import com.diamood.theme.Pink80
 import com.diamood.theme.PrimaryLight
 import com.diamood.theme.White30
+import com.diamood.viewmodels.login.LoadingState
 import com.diamood.viewmodels.login.LoginInputViewModel
 import com.diamood.viewmodels.login.LoginState.Completed
 import com.diamood.viewmodels.login.LoginState.InProgress
@@ -50,7 +51,8 @@ const val MAX_LENGTH_SMS_CODE = 6
 @Composable
 fun LoginInput(viewModel: LoginInputViewModel, navHostController: NavHostController?) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val isLoading = viewModel.isLoading
+    val loadingState by viewModel.loadingState.collectAsStateWithLifecycle()
+    val isLoading = loadingState == LoadingState.Loading
 
     Column(
         modifier = Modifier
@@ -61,7 +63,7 @@ fun LoginInput(viewModel: LoginInputViewModel, navHostController: NavHostControl
     ) {
         when (uiState) {
             InProgress -> InProgressLoginInput(viewModel, navHostController, isLoading)
-            SMSSent -> SMSSentLoginInput(viewModel, navHostController, isLoading)
+            SMSSent -> SMSSentLoginInput(viewModel, isLoading)
             Completed -> navHostController?.navigate(Routes.CompleteLoginRoute)
         }
     }
@@ -92,12 +94,34 @@ fun InProgressLoginInput(
 @Composable
 fun SMSSentLoginInput(
     viewModel: LoginInputViewModel,
-    navHostController: NavHostController?,
-    isLoading: Boolean
+    isLoading: Boolean,
 ) {
     val smsCode by viewModel.smsCode.collectAsStateWithLifecycle()
+    val phoneNumber = viewModel.number
+    val phoneCode = viewModel.prefix
 
-    //TODO Add Sent code text/button
+    Text(text = "Código SMS enviado a:")
+    Text(fontWeight = FontWeight.Bold, text = "$phoneCode $phoneNumber")
+    Button(
+        modifier = Modifier
+            .padding(top = 8.dp)
+            .height(24.dp),
+        onClick = { viewModel.onNumberChangeClicked() },
+        shape = RoundedCornerShape(8.dp),
+        colors = ButtonDefaults.buttonColors(containerColor = White),
+        contentPadding = PaddingValues(
+            start = 6.dp,
+            top = 0.dp,
+            end = 6.dp,
+            bottom = 0.dp,
+        )
+    ) {
+        Text(
+            fontWeight = FontWeight.Bold,
+            text = "Cambiar",
+            color = PrimaryLight
+        )
+    }
     SMSCodeInput(text = smsCode, viewModel::onSMSChanged)
     when (isLoading) {
         true -> LoadingButton()
@@ -224,8 +248,8 @@ fun SMSSentLoginInputPreview() {
         verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        SMSSentLoginInput(hiltViewModel(), null, false)
-        SMSSentLoginInput(hiltViewModel(), null, true)
+        SMSSentLoginInput(hiltViewModel(), false)
+        SMSSentLoginInput(hiltViewModel(), true)
     }
 }
 
