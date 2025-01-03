@@ -4,9 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.diamood.data.login.Country
 import com.diamood.data.login.PhoneInfo
-import com.diamood.domain.login.Result
+import com.diamood.domain.Result
+import com.diamood.domain.login.LoginUseCase
 import com.diamood.domain.login.SendSMSUseCase
-import com.diamood.ui.login.LoginNavigationEvent
 import com.diamood.viewmodels.login.LoadingState.Loaded
 import com.diamood.viewmodels.login.LoadingState.Loading
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -28,7 +28,8 @@ sealed class LoadingState() {
 
 @HiltViewModel
 class LoginInputViewModel @Inject internal constructor(
-    val sendSMSUseCase: SendSMSUseCase
+    val sendSMSUseCase: SendSMSUseCase,
+    val loginUseCase: LoginUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<LoginState>(LoginState.InProgress)
@@ -79,5 +80,17 @@ class LoginInputViewModel @Inject internal constructor(
 
     fun onNumberChangeClicked() {
         _uiState.value = LoginState.InProgress
+    }
+
+    fun onPostLogin() {
+        _loadingState.value = Loading
+        viewModelScope.launch {
+            val result = loginUseCase(smsCode.value)
+            when (result) {
+                Result.Success -> _uiState.value = LoginState.SMSSent
+                Result.Failure -> _uiState.value = LoginState.InProgress
+            }
+            _loadingState.value = Loaded
+        }
     }
 }

@@ -3,19 +3,13 @@ package com.diamood.login
 import com.diamood.MainDispatcherRule
 import com.diamood.api.login.LoginRepositoryImplFake
 import com.diamood.data.login.Country
+import com.diamood.domain.login.LoginUseCase
 import com.diamood.domain.login.SendSMSUseCase
-import com.diamood.viewmodels.login.LoadingState
 import com.diamood.viewmodels.login.LoadingState.Loading
 import com.diamood.viewmodels.login.LoginInputViewModel
-import com.diamood.viewmodels.login.LoginState
 import com.diamood.viewmodels.login.LoginState.InProgress
 import junit.framework.TestCase.assertEquals
-import kotlinx.coroutines.android.awaitFrame
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import org.junit.Rule
 import org.junit.Test
@@ -27,8 +21,9 @@ class LoginInputViewModelTest {
     val mainDispatcherRule = MainDispatcherRule()
 
     val fakeRepo = LoginRepositoryImplFake()
-    val useCase = SendSMSUseCase(fakeRepo)
-    private val viewModel = LoginInputViewModel(useCase)
+    val sendSMSUseCase = SendSMSUseCase(fakeRepo)
+    val loginUseCase = LoginUseCase(fakeRepo)
+    private val viewModel = LoginInputViewModel(sendSMSUseCase, loginUseCase)
 
     @Test
     fun `when country is selected, then assign country`() {
@@ -65,6 +60,13 @@ class LoginInputViewModelTest {
     }
 
     @Test
+    fun `when login button is pressed, then state changes to loading`() = runTest {
+        viewModel.onPostLogin()
+
+        assertEquals(Loading, viewModel.loadingState.replayCache[0])
+    }
+
+    @Test
     fun `when send sms button is pressed, then useCase is called`() = runTest {
         viewModel.onSendSMSClicked()
 
@@ -74,9 +76,18 @@ class LoginInputViewModelTest {
     }
 
     @Test
+    fun `when login button is pressed, then useCase is called`() = runTest {
+        viewModel.onPostLogin()
+
+        delay(30L)
+
+        assertEquals(true, fakeRepo.loginPosted)
+    }
+
+    @Test
     fun `when change number button is pressed, then state changes to in progress`() {
         viewModel.onNumberChangeClicked()
 
-        assertEquals(InProgress,viewModel.uiState.value)
+        assertEquals(InProgress, viewModel.uiState.value)
     }
 }

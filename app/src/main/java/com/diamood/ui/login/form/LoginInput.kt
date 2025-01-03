@@ -129,7 +129,7 @@ fun SMSSentLoginInput(
             text = "Iniciar sesión",
             input = smsCode,
             minLength = 6
-        ) { /**TODO Add login call **/ }
+        ) { viewModel.onPostLogin() }
     }
 }
 
