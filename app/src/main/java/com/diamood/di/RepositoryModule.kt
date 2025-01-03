@@ -6,6 +6,8 @@ import com.diamood.api.home.HomeRepository
 import com.diamood.api.home.HomeRepositoryImpl
 import com.diamood.api.json.JsonHelper
 import com.diamood.api.json.JsonHelperIml
+import com.diamood.api.login.LoginRepository
+import com.diamood.api.login.LoginRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -19,6 +21,11 @@ abstract class RepositoryModule {
     abstract fun bindCountryRepository(
         countryRepositoryImpl: CountryRepositoryImpl
     ): CountryRepository
+
+    @Binds
+    abstract fun bindLoginRepository(
+        loginRepository: LoginRepositoryImpl
+    ): LoginRepository
 
     @Binds
     abstract fun bindHomeRepository(
