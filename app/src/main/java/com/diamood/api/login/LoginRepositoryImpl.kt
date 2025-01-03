@@ -23,6 +23,7 @@ class LoginRepositoryImplFake : LoginRepository {
 
     var loginPosted = false
     override suspend fun postLogin(smsCode: String) {
+        delay(30L)
         loginPosted = true
     }
 }
