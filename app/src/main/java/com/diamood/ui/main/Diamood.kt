@@ -26,6 +26,7 @@ import com.diamood.data.main.routes.Routes.AddRoute
 import com.diamood.data.main.routes.Routes.HomeRoute
 import com.diamood.data.main.routes.Routes.LoginRoute
 import com.diamood.data.main.routes.Routes.ShopRoute
+import com.diamood.ui.add.AddCanvas
 import com.diamood.ui.home.Home
 import com.diamood.ui.home.buttons.HomeDirection
 import com.diamood.ui.login.Login
@@ -69,16 +70,9 @@ fun Diamood(context: Activity?) {
             }
 
             composable<AddRoute>(typeMap = AddRoute.typeMap) {
-                showBottom.value = true
+                showBottom.value = false
 
-                Text(
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .fillMaxWidth()
-                        .wrapContentSize(),
-                    text = "Add",
-                    textAlign = TextAlign.Center,
-                )
+                AddCanvas()
             }
 
             composable<ShopRoute>(typeMap = ShopRoute.typeMap) {
