@@ -9,7 +9,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -19,6 +22,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -49,38 +53,73 @@ fun AddCanvas(onNavigate: (Routes) -> Unit) {
             .background(addCanvasBackground)
             .dots()
             .fillMaxSize(),
-        verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        TopButtons(available, onNavigate)
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
+                .padding(horizontal = 16.dp),
+            horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            Text(
-                text = "Cancelar",
-                fontSize = 18.sp,
-                modifier = Modifier
-                    .clickable { onNavigate(Routes.HomeRoute) },
-                textAlign = TextAlign.Center,
-                color = Color.Black,
-            )
-            val alpha = if (available) 1f else 0.38f
-            Text(
-                text = "Guardar",
-                fontSize = 18.sp,
-                modifier = Modifier
-                    .alpha(alpha)
-                    .clickable(enabled = available) {
-
-                    },
-                textAlign = TextAlign.Center,
-                color = Color.Black,
-                fontWeight = FontWeight.Bold,
-            )
+            Button(
+                modifier = Modifier.weight(1f),
+                onClick = { },
+                shape = RoundedCornerShape(8.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = White),
+            ) {
+                Text(
+                    fontWeight = FontWeight.Bold,
+                    text = "Lista de deseos",
+                    color = Color.Black
+                )
+            }
+            VerticalDivider(modifier = Modifier.weight(0.1f))
+            Button(
+                modifier = Modifier.weight(1f),
+                onClick = { },
+                shape = RoundedCornerShape(8.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = White),
+            ) {
+                Text(
+                    fontWeight = FontWeight.Bold,
+                    text = "Comprado",
+                    color = Color.Black
+                )
+            }
         }
+    }
+}
 
+@Composable
+fun TopButtons(available: Boolean, onNavigate: (Routes) -> Unit) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(
+            text = "Cancelar",
+            fontSize = 18.sp,
+            modifier = Modifier
+                .clickable { onNavigate(Routes.HomeRoute) },
+            textAlign = TextAlign.Center,
+            color = Color.Black,
+        )
+        val alpha = if (available) 1f else 0.38f
+        Text(
+            text = "Guardar",
+            fontSize = 18.sp,
+            modifier = Modifier
+                .alpha(alpha)
+                .clickable(enabled = available) {
+
+                },
+            textAlign = TextAlign.Center,
+            color = Color.Black,
+            fontWeight = FontWeight.Bold,
+        )
     }
 }
 
@@ -88,4 +127,13 @@ fun AddCanvas(onNavigate: (Routes) -> Unit) {
 @Composable
 fun AddCanvasPreview() {
     AddCanvas {}
+}
+
+@Preview
+@Composable
+fun TopButtonsPreview() {
+    Column {
+        TopButtons(true) { }
+        TopButtons(false) { }
+    }
 }
