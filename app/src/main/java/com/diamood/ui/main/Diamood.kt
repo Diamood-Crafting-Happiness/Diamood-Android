@@ -72,7 +72,7 @@ fun Diamood(context: Activity?) {
             composable<AddRoute>(typeMap = AddRoute.typeMap) {
                 showBottom.value = false
 
-                AddCanvas()
+                AddCanvas(navController::navigate)
             }
 
             composable<ShopRoute>(typeMap = ShopRoute.typeMap) {
